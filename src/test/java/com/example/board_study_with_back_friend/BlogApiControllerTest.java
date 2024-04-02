@@ -121,4 +121,36 @@ public class BlogApiControllerTest {
 			.andExpect(jsonPath("$.content").value("test 내용"));
 	}
 
+	@DisplayName("Article 수정 테스트")
+	@Test
+	public void updateArticle() throws Exception{
+		// given
+		final String url = "/article/{id}";
+		final String title = "test 제목";
+		final String content = "test 내용";
+
+		ArticleRequest articleRequest = new ArticleRequest(title, content);
+
+		Article savedArticle = articleRepository.save(new Article(ArticleDto.from(articleRequest)));
+
+		final String updateTitle = "update 제목";
+		final String updateContent = "update 내용";
+		ArticleRequest updateRequest = new ArticleRequest(updateTitle, updateContent);
+
+//		final String requestBody = objectMapper.writeValueAsString(updateRequest);
+
+		// when
+		ResultActions resultActions = mockMvc.perform(patch(url, savedArticle.getId())
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(updateRequest)));
+
+		// then
+		resultActions
+			.andExpect(status().isOk());
+
+		Article article = articleRepository.findById(savedArticle.getId()).get();
+
+		assertThat(article.getTitle()).isEqualTo(updateTitle);
+		assertThat(article.getContent()).isEqualTo(updateContent);
+	}
 }
