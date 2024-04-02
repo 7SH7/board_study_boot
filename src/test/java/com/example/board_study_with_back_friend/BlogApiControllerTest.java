@@ -2,6 +2,7 @@ package com.example.board_study_with_back_friend;
 
 import com.example.board_study_with_back_friend.controller.request.ArticleRequest;
 import com.example.board_study_with_back_friend.domain.Article;
+import com.example.board_study_with_back_friend.dto.ArticleDto;
 import com.example.board_study_with_back_friend.repository.ArticleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;    // get, post
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;      // status, jsonPath
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -70,6 +71,32 @@ public class BlogApiControllerTest {
 		assertThat(articles.get(0).getTitle()).isEqualTo(title);
 		assertThat(articles.get(0).getContent()).isEqualTo(content);
 
+	}
+
+	@DisplayName("Article 조회 테스트")
+	@Test
+	public void findAllArticles() throws Exception{
+		// given
+		final String url = "/articles";
+		final String title = "test 제목";
+		final String content = "test 내용";
+
+		ArticleRequest articleRequest = new ArticleRequest(title, content);
+
+
+		articleRepository.save(new Article(ArticleDto.from(articleRequest)));
+
+		// 여기는 json 형식을 받지 않기 때문에 직렬화/역직렬화 과정이 필요 없음.
+
+		// when
+		final ResultActions resultActions = mockMvc.perform(get(url)
+				.accept(MediaType.APPLICATION_JSON));
+
+		// then
+		resultActions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$[0].title").value("test 제목"))
+			.andExpect(jsonPath("$[0].content").value("test 내용"));
 	}
 
 }

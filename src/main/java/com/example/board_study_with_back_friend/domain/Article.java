@@ -32,6 +32,11 @@ public class Article {
 			.build();
 	}
 
+	public Article(ArticleDto articleDto){
+		this.title = articleDto.getTitle();
+		this.content = articleDto.getContent();
+	}
+
 	public void update(ArticleDto articleDto){
 		this.title = articleDto.getTitle();
 		this.content = articleDto.getContent();
