@@ -73,7 +73,7 @@ public class BlogApiControllerTest {
 
 	}
 
-	@DisplayName("Article 조회 테스트")
+	@DisplayName("Article 조회 테스트_1")
 	@Test
 	public void findAllArticles() throws Exception{
 		// given
@@ -97,6 +97,28 @@ public class BlogApiControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[0].title").value("test 제목"))
 			.andExpect(jsonPath("$[0].content").value("test 내용"));
+	}
+
+	@DisplayName("Article 조회 테스트_2")
+	@Test
+	public void findArticle() throws Exception{
+		// given
+		final String url = "/article/{id}";
+		final String title = "test 제목";
+		final String content = "test 내용";
+
+		ArticleRequest articleRequest = new ArticleRequest(title, content);
+
+		Article savedArticle = articleRepository.save(new Article(ArticleDto.from(articleRequest)));
+
+		// when
+		final ResultActions resultActions = mockMvc.perform(get(url, savedArticle.getId()));
+
+		// then
+		resultActions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.title").value("test 제목"))
+			.andExpect(jsonPath("$.content").value("test 내용"));
 	}
 
 }
