@@ -41,7 +41,6 @@ public class ArticleController {
 		return ResponseEntity.ok().build();
 	}
 
-	// update 제외 일 다 함. -> 이건 확인 필요!
 	@PatchMapping("/article/{id}")
 	public ResponseEntity<ArticleResponse> updateArticle(@PathVariable Long id, @RequestBody ArticleRequest articleRequest) {
 		ArticleDto articleDto = articleService.update(id, articleRequest);
