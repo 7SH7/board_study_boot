@@ -3,15 +3,14 @@ package com.example.board_study_with_back_friend.domain;
 import com.example.board_study_with_back_friend.controller.request.ArticleRequest;
 import com.example.board_study_with_back_friend.dto.ArticleDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Setter
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,24 +29,25 @@ public class Article {
 			fetch = FetchType.LAZY,
 			cascade = CascadeType.ALL,
 			orphanRemoval = true)
-	private List<Comment> comments;
+	private List<Comment> comments =  new ArrayList<>();
 
 	public static Article from(ArticleRequest articleRequest){
 		return Article.builder()
 			.title(articleRequest.getTitle())
 			.content(articleRequest.getContent())
+			.comments( new ArrayList<>())
 			.build();
 	}
 
 	public Article(ArticleDto articleDto){
 		this.title = articleDto.getTitle();
 		this.content = articleDto.getContent();
+		this.comments =  new ArrayList<>();
 	}
 
 	public void update(ArticleDto articleDto){
 		this.title = articleDto.getTitle();
 		this.content = articleDto.getContent();
-
 	}
 
-}
+ }
