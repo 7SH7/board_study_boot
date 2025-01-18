@@ -37,7 +37,7 @@ public class LoginController {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = new GsonFactory();
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                .setAudience(Collections.singletonList(/*여러분의 clientId를 넣어주세요.*/))
+                .setAudience(Collections.singletonList(clientId))  // 여기서 에러남. 해결해야함.
                 .build();
 
         try {
