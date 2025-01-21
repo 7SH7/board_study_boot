@@ -30,6 +30,11 @@ public class LoginController {
         this.memberService = memberService;
     }
 
+    @GetMapping("/check/clientId")
+    public ResponseEntity<String> get(){
+        return ResponseEntity.ok(clientId);
+    }
+
     @PostMapping("/google")
     public ResponseEntity<Map<String, Object>> googleLogin(@RequestParam String credential) {
 
